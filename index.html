@@ -7,23 +7,29 @@
     <title>Document</title>
     <script>
       const todo = (callback) => {
-        const Request = new XMLHttpRequest();
+
+        return new Promise((resolve,reject) => {
+          const Request = new XMLHttpRequest();
         
         Request.addEventListener("readystatechange", () => {
           if (Request.readyState === 4 && Request.status === 200) {
               const data = JSON.parse(Request.responseText);
-            callback(undefined, data);
+            resolve(data);
           } else if(Request.readyState === 4) {
-            callback('Unable to fetch data',undefined);
+            reject('Unable to fetch data');
           }
         });
         Request.open("GET", "todos.json");
         Request.send();
+
+        });
+        
       };
 
-      todo((error, data) => {
-          console.log("done");
-          console.log(error, data);
+      todo().then(data => {
+        console.log(data);
+      }).catch(error=>{
+        console.log(error);
       });
     </script>
   </head>
